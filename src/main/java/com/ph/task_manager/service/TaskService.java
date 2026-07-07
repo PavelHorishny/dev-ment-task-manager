@@ -38,6 +38,7 @@ public class TaskService {
         return convertToResponse(savedTask);
     }
 
+    @Transactional
     public TaskResponse updateTask(Long id, TaskUpdateRequest request) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(()->new TaskNotFoundException(id));
