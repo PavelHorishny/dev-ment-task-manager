@@ -48,6 +48,14 @@ public class TaskService {
         return convertToResponse(task);
     }
     @Transactional
+    public void deleteTask(Long id) {
+        if(!taskRepository.existsById(id)){
+            throw new TaskNotFoundException(id);
+        }
+        taskRepository.deleteById(id);
+    }
+
+    @Transactional
     public TaskResponse completeTask(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(()->new TaskNotFoundException(id));
