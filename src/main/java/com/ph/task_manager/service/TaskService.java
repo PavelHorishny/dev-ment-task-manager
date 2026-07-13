@@ -7,28 +7,29 @@ import com.ph.task_manager.entity.Task;
 import com.ph.task_manager.exception.TaskNotFoundException;
 import com.ph.task_manager.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class TaskService {
     private final TaskRepository taskRepository;
 
-    public List<TaskResponse> findAll() {
-        return taskRepository.findAll().stream()
-                .map(this::convertToResponse)
-                .toList();
+    @Transactional(readOnly = true)
+    public Page<TaskResponse> findAll(Pageable pageable) {
+        return taskRepository.findAll(pageable)
+                .map(this::convertToResponse);
     }
 
+    @Transactional(readOnly = true)
     public TaskResponse getTaskById(Long id) {
         return taskRepository.findById(id)
                 .map(this::convertToResponse)
                 .orElseThrow(()->new TaskNotFoundException(id));
     }
+
     @Transactional
     public TaskResponse newTask(TaskCreateRequest request) {
         Task task = Task.builder().title(request.title())
@@ -48,6 +49,7 @@ public class TaskService {
 
         return convertToResponse(task);
     }
+
     @Transactional
     public void deleteTask(Long id) {
         if(!taskRepository.existsById(id)){
