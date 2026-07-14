@@ -5,6 +5,7 @@ import com.ph.task_manager.dto.TaskResponse;
 import com.ph.task_manager.dto.TaskUpdateRequest;
 import com.ph.task_manager.entity.Task;
 import com.ph.task_manager.exception.TaskNotFoundException;
+import com.ph.task_manager.mapper.TaskMapper;
 import com.ph.task_manager.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,17 +17,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     @Transactional(readOnly = true)
     public Page<TaskResponse> findAll(Pageable pageable) {
         return taskRepository.findAll(pageable)
-                .map(this::convertToResponse);
+                .map(taskMapper::toResponse);
     }
 
     @Transactional(readOnly = true)
     public TaskResponse getTaskById(Long id) {
         return taskRepository.findById(id)
-                .map(this::convertToResponse)
+                .map(taskMapper::toResponse)
                 .orElseThrow(()->new TaskNotFoundException(id));
     }
 
@@ -36,7 +38,7 @@ public class TaskService {
                 .description(request.description())
                 .build();
         Task savedTask = taskRepository.save(task);
-        return convertToResponse(savedTask);
+        return taskMapper.toResponse(savedTask);
     }
 
     @Transactional
@@ -47,7 +49,7 @@ public class TaskService {
         task.setTitle(request.title());
         task.setDescription(request.description());
 
-        return convertToResponse(task);
+        return taskMapper.toResponse(task);
     }
 
     @Transactional
@@ -63,10 +65,10 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(()->new TaskNotFoundException(id));
         task.setDone(true);
-        return convertToResponse(task);
+        return taskMapper.toResponse(task);
     }
 
-    private TaskResponse convertToResponse(Task task) {
+/*    private TaskResponse convertToResponse(Task task) {
         return new TaskResponse(
             task.getId(),
             task.getTitle(),
@@ -74,5 +76,5 @@ public class TaskService {
             task.isDone(),
             task.getCreatedAt()
         );
-    }
+    }*/
 }
