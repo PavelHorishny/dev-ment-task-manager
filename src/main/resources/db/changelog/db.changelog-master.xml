@@ -7,5 +7,6 @@
 
     <include file="db/changelog/changes/001-create-tasks-table.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/changes/002-insert-seed-tasks.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/003-insert-seed-tasks.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>

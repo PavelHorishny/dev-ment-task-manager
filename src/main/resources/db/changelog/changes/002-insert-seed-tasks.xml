@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="002-insert-seed-tasks" author="ph" context="dev">
+        <insert tableName="tasks">
+            <column name="title" value="Buy milk"/>
+            <column name="description" value="One bottle 3,2%"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="created_at" valueDate="2026-07-14T10:00:00"/>
+        </insert>
+        <insert tableName="tasks">
+            <column name="title" value="Visit museum"/>
+            <column name="description" value="Visit Szczecin's palace"/>
+            <column name="done" valueBoolean="true"/>
+            <column name="created_at" valueDate="2026-07-13T09:30:00"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="tasks"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

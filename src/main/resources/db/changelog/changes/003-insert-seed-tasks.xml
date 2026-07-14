@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="002-insert-seed-tasks" author="ph" context="dev">
+        <insert tableName="tasks">
+            <column name="title" value="Visit grocery store"/>
+            <column name="description" value="Buy bread and milk"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="created_at" valueDate="2026-07-14T11:00:00"/>
+        </insert>
+        <insert tableName="tasks">
+            <column name="title" value="Take new book"/>
+            <column name="description" value="Read at least 10 pages"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="created_at" valueDate="2026-07-13T11:30:00"/>
+        </insert>
+        <insert tableName="tasks">
+            <column name="title" value="Pay the bills"/>
+            <column name="description" value="Pay electricity and water bills"/>
+            <column name="done" valueBoolean="false"/>
+            <column name="created_at" valueDate="2026-07-13T12:30:00"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="tasks"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
