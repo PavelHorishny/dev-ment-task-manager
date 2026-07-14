@@ -12,20 +12,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@With
 public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
-    private String title;
-    private String description;
-    @Column(nullable = false)
-    private boolean done = false;
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @PrePersist
-    protected void onCreate(){
-        this.createdAt = LocalDateTime.now();
-    }
+  @Column(nullable = false)
+  private String title;
+
+  private String description;
+
+  @Column(nullable = false)
+  private boolean done = false;
+
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
+
+  @PrePersist
+  protected void onCreate() {
+    this.createdAt = LocalDateTime.now();
+  }
 }
