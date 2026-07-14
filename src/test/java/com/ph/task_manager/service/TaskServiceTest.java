@@ -4,6 +4,7 @@ import com.ph.task_manager.dto.TaskCreateRequest;
 import com.ph.task_manager.dto.TaskResponse;
 import com.ph.task_manager.entity.Task;
 import com.ph.task_manager.exception.TaskNotFoundException;
+import com.ph.task_manager.mapper.TaskMapper;
 import com.ph.task_manager.repository.TaskRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,9 +24,11 @@ import static org.mockito.Mockito.*;
 public class TaskServiceTest {
     @Mock
     private TaskRepository taskRepository;
-
+    @Mock
+    private TaskMapper mapper;
     @InjectMocks
     private TaskService taskService;
+
 
     @Test
     @DisplayName("Create a new task")
@@ -41,7 +44,13 @@ public class TaskServiceTest {
                 .build();
 
         when(taskRepository.save(any(Task.class))).thenReturn(savedTask);
-
+        when(mapper.toResponse(savedTask)).thenReturn(new TaskResponse(
+                savedTask.getId(),
+                savedTask.getTitle(),
+                savedTask.getDescription(),
+                savedTask.isDone(),
+                savedTask.getCreatedAt()
+        ));
         TaskResponse response = taskService.newTask(request);
 
         assertNotNull(response);
@@ -65,6 +74,13 @@ public class TaskServiceTest {
                 .build();
 
         when(taskRepository.findById(id)).thenReturn(Optional.of(existingTask));
+        when(mapper.toResponse(existingTask)).thenReturn(new TaskResponse(
+                existingTask.getId(),
+                existingTask.getTitle(),
+                existingTask.getDescription(),
+                existingTask.isDone(),
+                existingTask.getCreatedAt()
+        ));
 
         TaskResponse response = taskService.getTaskById(id);
 
