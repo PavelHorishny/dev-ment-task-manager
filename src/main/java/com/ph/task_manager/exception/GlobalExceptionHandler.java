@@ -10,14 +10,14 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<Map<String,Object>> handleTaskNotFound(TaskNotFoundException e) {
-        Map<String,Object> body = Map.of(
-                "timestamp", LocalDateTime.now(),
-                "status", HttpStatus.NOT_FOUND.value(),
-                "error", "Task not found",
-                "message", e.getMessage()
-        );
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-    }
+  @ExceptionHandler(TaskNotFoundException.class)
+  public ResponseEntity<Map<String, Object>> handleTaskNotFound(TaskNotFoundException e) {
+    Map<String, Object> body =
+        Map.of(
+            "timestamp", LocalDateTime.now(),
+            "status", HttpStatus.NOT_FOUND.value(),
+            "error", "Task not found",
+            "message", e.getMessage());
+    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
 }
