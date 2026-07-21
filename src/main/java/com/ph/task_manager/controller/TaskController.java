@@ -50,6 +50,6 @@ public class TaskController {
 
     @PatchMapping("/{id}/complete")
     public TaskResponse completeTask(@PathVariable Long id) {
-        return taskService.completeTask(id);
+        return taskService.updateTask(id, true);
     }
 }
