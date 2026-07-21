@@ -9,6 +9,7 @@ import com.ph.task_manager.mapper.TaskMapper;
 import com.ph.task_manager.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +17,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class TaskService {
+
+  private static final int MAX_PAGE_SIZE = 50;
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;
 
   @Transactional(readOnly = true)
   public Page<TaskResponse> findAll(Pageable pageable) {
-    return taskRepository.findAll(pageable).map(taskMapper::toResponse);
+    Pageable limitedPageable = pageable.getPageSize() > MAX_PAGE_SIZE
+            ? PageRequest.of(pageable.getPageNumber(), MAX_PAGE_SIZE, pageable.getSort())
+            : pageable;
+    return taskRepository.findAll(limitedPageable).map(taskMapper::toResponse);
   }
 
   @Transactional(readOnly = true)
@@ -41,11 +47,19 @@ public class TaskService {
 
   @Transactional
   public TaskResponse updateTask(Long id, TaskUpdateRequest request) {
-    Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+    Task task = ifTaskExists(id);
 
     task.setTitle(request.title());
     task.setDescription(request.description());
 
+    return taskMapper.toResponse(task);
+  }
+
+  public TaskResponse updateTask(Long id, boolean done){
+    Task task = ifTaskExists(id);
+
+    task.setDone(done);
     return taskMapper.toResponse(task);
   }
 
@@ -57,10 +71,8 @@ public class TaskService {
     taskRepository.deleteById(id);
   }
 
-  @Transactional
-  public TaskResponse completeTask(Long id) {
-    Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-    task.setDone(true);
-    return taskMapper.toResponse(task);
+
+  private Task ifTaskExists(Long id){
+    return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
   }
 }
